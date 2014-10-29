@@ -2275,10 +2275,14 @@ final class S3Request
 	*/
 	private function __responseWriteCallback(&$curl, &$data)
 	{
-		if (in_array($this->response->code, array(200, 206)) && $this->fp !== false)
+		if (in_array($this->response->code, array(200, 206)) && $this->fp !== false) {
 			return fwrite($this->fp, $data);
-		else
+        } else {
+            if (!isset($this->response->body)) {
+                $this->response->body = '';
+            }
 			$this->response->body .= $data;
+        }
 		return strlen($data);
 	}
 
